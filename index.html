@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VeloVane — Beta Access</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --vv-blue: #5BA4D4;
+    --vv-blue-light: #E8F2FA;
+    --vv-blue-mid: #8FC1E2;
+    --vv-blue-dark: #3A7BAD;
+    --vv-blue-darker: #265A82;
+    --text-primary: #FFFFFF;
+    --text-secondary: rgba(255,255,255,0.6);
+    --text-tertiary: rgba(255,255,255,0.3);
+    --surface-dark: #0C0C0E;
+    --surface-card: #151518;
+    --surface-card-hover: #1A1A1E;
+    --border: rgba(255,255,255,0.06);
+    --border-light: rgba(255,255,255,0.1);
+    --go-mid: #4CAF50;
+    --go-dark: #2E7D32;
+    --go-light: rgba(76,175,80,0.1);
+    --caution-mid: #F9A825;
+    --skip-mid: #EF5350;
+    --f-mono: "Geist Mono", "SF Mono", "Fira Code", "Cascadia Code", monospace;
+  }
+
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--f-mono);
+    background: var(--surface-dark);
+    color: var(--text-primary);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-size: 14px;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* ================================ */
+  /* UTILITY                          */
+  /* ================================ */
+  .container {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 0 28px;
+  }
+  .section-label {
+    font-size: 9px;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--vv-blue);
+    margin-bottom: 16px;
+  }
+  .divider {
+    height: 1px;
+    background: var(--border);
+    margin: 0;
+  }
+
+  /* ================================ */
+  /* NAV                              */
+  /* ================================ */
+  .site-nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    background: rgba(12,12,14,0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-inner {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 0 28px;
+    height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .nav-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .nav-logo svg { width: 18px; height: 19px; }
+  .nav-logo span {
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--text-primary);
+  }
+  .nav-cta {
+    font-family: var(--f-mono);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--surface-dark);
+    background: var(--text-primary);
+    border: none;
+    padding: 8px 18px;
+    border-radius: 6px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: opacity 0.15s ease;
+  }
+  .nav-cta:hover { opacity: 0.85; }
+
+  /* ================================ */
+  /* HERO                             */
+  /* ================================ */
+  .hero {
+    padding: 140px 0 100px;
+    position: relative;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 50%;
+    transform: translateX(-50%);
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(91,164,212,0.06) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(91,164,212,0.08);
+    border: 1px solid rgba(91,164,212,0.15);
+    border-radius: 20px;
+    padding: 6px 14px;
+    margin-bottom: 32px;
+  }
+  .hero-badge-dot {
+    width: 6px; height: 6px;
+    background: var(--vv-blue);
+    border-radius: 50%;
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+  .hero-badge span {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    color: var(--vv-blue);
+    text-transform: uppercase;
+  }
+  .hero h1 {
+    font-size: 36px;
+    font-weight: 300;
+    line-height: 1.25;
+    color: var(--text-primary);
+    margin-bottom: 20px;
+    max-width: 520px;
+    letter-spacing: -0.01em;
+  }
+  .hero-sub {
+    font-size: 14px;
+    font-weight: 300;
+    color: var(--text-secondary);
+    line-height: 1.7;
+    max-width: 480px;
+    margin-bottom: 36px;
+  }
+  .hero-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--f-mono);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--surface-dark);
+    background: var(--text-primary);
+    border: none;
+    padding: 14px 28px;
+    border-radius: 8px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.2s ease;
+  }
+  .hero-cta:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+  }
+  .hero-cta svg {
+    width: 14px; height: 14px;
+    transition: transform 0.2s ease;
+  }
+  .hero-cta:hover svg { transform: translateX(3px); }
+
+  /* ================================ */
+  /* PROBLEM                          */
+  /* ================================ */
+  .problem {
+    padding: 80px 0;
+    border-top: 1px solid var(--border);
+  }
+  .problem h2 {
+    font-size: 22px;
+    font-weight: 300;
+    color: var(--text-primary);
+    margin-bottom: 16px;
+    line-height: 1.35;
+  }
+  .problem p {
+    font-size: 13px;
+    font-weight: 300;
+    color: var(--text-secondary);
+    line-height: 1.75;
+    max-width: 540px;
+  }
+
+  /* ================================ */
+  /* FEATURES                         */
+  /* ================================ */
+  .features {
+    padding: 80px 0;
+    border-top: 1px solid var(--border);
+  }
+  .features h2 {
+    font-size: 22px;
+    font-weight: 300;
+    color: var(--text-primary);
+    margin-bottom: 48px;
+    line-height: 1.35;
+  }
+  .feature-grid {
+    display: grid;
+    gap: 16px;
+  }
+  .feature-card {
+    background: var(--surface-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px 24px;
+    transition: border-color 0.2s ease;
+  }
+  .feature-card:hover {
+    border-color: var(--border-light);
+  }
+  .feature-num {
+    font-size: 9px;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    color: var(--vv-blue);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .feature-card h3 {
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--text-primary);
+    margin-bottom: 10px;
+    line-height: 1.4;
+  }
+  .feature-card p {
+    font-size: 12px;
+    font-weight: 300;
+    color: var(--text-secondary);
+    line-height: 1.7;
+  }
+
+  /* ================================ */
+  /* SMS EXPERIENCE                   */
+  /* ================================ */
+  .sms-section {
+    padding: 80px 0;
+    border-top: 1px solid var(--border);
+  }
+  .sms-section h2 {
+    font-size: 22px;
+    font-weight: 300;
+    color: var(--text-primary);
+    margin-bottom: 16px;
+    line-height: 1.35;
+  }
+  .sms-section > .container > p {
+    font-size: 13px;
+    font-weight: 300;
+    color: var(--text-secondary);
+    line-height: 1.75;
+    max-width: 540px;
+    margin-bottom: 48px;
+  }
+
+  /* Phone mockup */
+  .phone-demo {
+    display: flex;
+    gap: 32px;
+    align-items: flex-start;
+  }
+  .phone-frame {
+    width: 280px;
+    flex-shrink: 0;
+    background: #1C1C1E;
+    border-radius: 32px;
+    padding: 12px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.06);
+  }
+  .phone-screen {
+    background: #000;
+    border-radius: 22px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* Lock screen */
+  .lock-screen {
+    padding: 20px 16px;
+    min-height: 380px;
+    display: flex;
+    flex-direction: column;
+    background: linear-gradient(180deg, #1a1a2e 0%, #0f0f1a 100%);
+  }
+  .lock-time {
+    text-align: center;
+    font-size: 52px;
+    font-weight: 200;
+    color: white;
+    letter-spacing: 2px;
+    margin-top: 24px;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif;
+  }
+  .lock-date {
+    text-align: center;
+    font-size: 13px;
+    font-weight: 400;
+    color: rgba(255,255,255,0.6);
+    margin-bottom: 36px;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif;
+  }
+
+  /* Notification bubble */
+  .notif {
+    background: rgba(45,45,50,0.85);
+    backdrop-filter: blur(20px);
+    border-radius: 16px;
+    padding: 14px;
+    margin: 0 2px;
+  }
+  .notif-header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 8px;
+  }
+  .notif-icon {
+    width: 20px; height: 20px;
+    background: var(--vv-blue);
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .notif-icon svg { width: 12px; height: 12px; }
+  .notif-app {
+    font-size: 11px;
+    font-weight: 500;
+    color: rgba(255,255,255,0.5);
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    flex: 1;
+  }
+  .notif-time {
+    font-size: 11px;
+    color: rgba(255,255,255,0.35);
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+  .notif-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: white;
+    margin-bottom: 3px;
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+  .notif-body {
+    font-size: 12px;
+    font-weight: 400;
+    color: rgba(255,255,255,0.75);
+    line-height: 1.45;
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+
+  .phone-caption {
+    flex: 1;
+    min-width: 0;
+  }
+  .phone-caption-step {
+    margin-bottom: 32px;
+  }
+  .phone-caption-step:last-child { margin-bottom: 0; }
+  .step-num {
+    font-size: 9px;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    color: var(--vv-blue);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .step-title {
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--text-primary);
+    margin-bottom: 6px;
+    line-height: 1.4;
+  }
+  .step-desc {
+    font-size: 12px;
+    font-weight: 300;
+    color: var(--text-secondary);
+    line-height: 1.65;
+  }
+
+  /* ================================ */
+  /* WHO                              */
+  /* ================================ */
+  .who {
+    padding: 80px 0;
+    border-top: 1px solid var(--border);
+  }
+  .who h2 {
+    font-size: 22px;
+    font-weight: 300;
+    color: var(--text-primary);
+    margin-bottom: 16px;
+    line-height: 1.35;
+  }
+  .who p {
+    font-size: 13px;
+    font-weight: 300;
+    color: var(--text-secondary);
+    line-height: 1.75;
+    max-width: 540px;
+  }
+
+  /* ================================ */
+  /* WHAT YOU GET                     */
+  /* ================================ */
+  .perks {
+    padding: 80px 0;
+    border-top: 1px solid var(--border);
+  }
+  .perks h2 {
+    font-size: 22px;
+    font-weight: 300;
+    color: var(--text-primary);
+    margin-bottom: 36px;
+    line-height: 1.35;
+  }
+  .perk-list {
+    list-style: none;
+  }
+  .perk-item {
+    display: flex;
+    gap: 14px;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--border);
+    align-items: flex-start;
+  }
+  .perk-item:first-child { padding-top: 0; }
+  .perk-item:last-child { border-bottom: none; }
+  .perk-check {
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    background: var(--go-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .perk-check svg { width: 10px; height: 10px; }
+  .perk-text {
+    font-size: 13px;
+    font-weight: 300;
+    color: var(--text-secondary);
+    line-height: 1.6;
+  }
+  .ask-block {
+    margin-top: 36px;
+    padding: 20px 24px;
+    background: var(--surface-card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+  }
+  .ask-block-label {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-tertiary);
+    margin-bottom: 8px;
+  }
+  .ask-block p {
+    font-size: 12px;
+    font-weight: 300;
+    color: var(--text-secondary);
+    line-height: 1.65;
+  }
+
+  /* ================================ */
+  /* FORM                             */
+  /* ================================ */
+  .signup {
+    padding: 80px 0 100px;
+    border-top: 1px solid var(--border);
+  }
+  .signup h2 {
+    font-size: 22px;
+    font-weight: 300;
+    color: var(--text-primary);
+    margin-bottom: 36px;
+    line-height: 1.35;
+  }
+  .form-grid {
+    display: grid;
+    gap: 20px;
+  }
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .form-group.full { grid-column: 1 / -1; }
+  .form-label {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-tertiary);
+  }
+  .form-input,
+  .form-select,
+  .form-textarea {
+    font-family: var(--f-mono);
+    font-size: 13px;
+    font-weight: 300;
+    color: var(--text-primary);
+    background: var(--surface-card);
+    border: 1px solid var(--border-light);
+    border-radius: 8px;
+    padding: 12px 14px;
+    outline: none;
+    transition: border-color 0.15s ease;
+    -webkit-appearance: none;
+  }
+  .form-input::placeholder,
+  .form-textarea::placeholder {
+    color: var(--text-tertiary);
+  }
+  .form-input:focus,
+  .form-select:focus,
+  .form-textarea:focus {
+    border-color: var(--vv-blue);
+  }
+  .form-select {
+    cursor: pointer;
+    background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l4 4 4-4' stroke='rgba(255,255,255,0.3)' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    padding-right: 36px;
+  }
+  .form-select option {
+    background: var(--surface-card);
+    color: var(--text-primary);
+  }
+  .form-textarea {
+    resize: vertical;
+    min-height: 80px;
+    line-height: 1.6;
+  }
+  .form-hint {
+    font-size: 10px;
+    font-weight: 300;
+    color: var(--text-tertiary);
+    margin-top: -2px;
+  }
+  .form-submit {
+    font-family: var(--f-mono);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--surface-dark);
+    background: var(--text-primary);
+    border: none;
+    padding: 16px 32px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-top: 8px;
+    width: 100%;
+  }
+  .form-submit:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+  }
+
+  /* ================================ */
+  /* FOOTER                           */
+  /* ================================ */
+  .site-footer {
+    padding: 48px 0;
+    border-top: 1px solid var(--border);
+    text-align: center;
+  }
+  .footer-logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+  .footer-logo svg { width: 16px; height: 17px; }
+  .footer-logo span {
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--text-secondary);
+  }
+  .footer-tagline {
+    font-size: 11px;
+    font-weight: 300;
+    color: var(--text-tertiary);
+    margin-bottom: 4px;
+  }
+  .footer-coming {
+    font-size: 10px;
+    font-weight: 300;
+    color: var(--text-tertiary);
+  }
+
+  /* ================================ */
+  /* RESPONSIVE                       */
+  /* ================================ */
+  @media (max-width: 640px) {
+    .hero h1 { font-size: 26px; }
+    .problem h2, .features h2, .sms-section h2, .who h2, .perks h2, .signup h2 {
+      font-size: 20px;
+    }
+    .phone-demo {
+      flex-direction: column;
+      align-items: center;
+    }
+    .phone-frame { width: 260px; }
+    .form-row {
+      grid-template-columns: 1fr;
+    }
+    .container { padding: 0 20px; }
+  }
+
+  /* Fade-in animation */
+  .fade-in {
+    opacity: 0;
+    transform: translateY(16px);
+    animation: fadeUp 0.6s ease forwards;
+  }
+  @keyframes fadeUp {
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .fade-in:nth-child(2) { animation-delay: 0.08s; }
+  .fade-in:nth-child(3) { animation-delay: 0.16s; }
+  .fade-in:nth-child(4) { animation-delay: 0.24s; }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="site-nav">
+  <div class="nav-inner">
+    <div class="nav-logo">
+      <svg viewBox="0 0 27 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M0 8.40756V0.784399C0 0.354434 0.348624 0 0.784399 0H7.01308C7.29197 0 7.55345 0.151068 7.6929 0.389291L18.5524 19.2032C18.6221 19.3194 18.657 19.4588 18.657 19.5925V27.2156C18.657 27.6456 18.3084 28 17.8726 28H11.6439C11.365 28 11.1035 27.8489 10.9641 27.6107L0.104599 8.79685C0.0348755 8.68064 0 8.54119 0 8.40756Z" fill="#5BA4D4"/>
+        <path d="M18.9185 2.00462L22.12 0.156941C22.2827 0.0639758 22.486 0.0639758 22.6487 0.156941L25.8502 2.00462C26.0129 2.09759 26.1175 2.2719 26.1175 2.46365V10.4703C26.1175 10.662 26.0187 10.8363 25.8502 10.9293L19.4472 14.6247C19.0928 14.828 18.6512 14.5724 18.6512 14.1657V2.46365C18.6512 2.2719 18.75 2.09759 18.9185 2.00462Z" fill="#5BA4D4"/>
+      </svg>
+      <span>velovane</span>
+    </div>
+    <a href="#signup" class="nav-cta">Request Access</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-badge fade-in">
+      <div class="hero-badge-dot"></div>
+      <span>Beta — accepting testers</span>
+    </div>
+    <h1 class="fade-in">Stop checking the weather. Start knowing when to ride.</h1>
+    <p class="hero-sub fade-in">VeloVane is a cycling weather app that tells you when to ride — not just what the weather is. We're looking for serious riders to beta test the experience before launch.</p>
+    <a href="#signup" class="hero-cta fade-in">
+      Request early access
+      <svg viewBox="0 0 16 16" fill="none"><path d="M3 8h10m0 0L9 4m4 4L9 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </a>
+  </div>
+</section>
+
+<!-- PROBLEM -->
+<section class="problem">
+  <div class="container">
+    <div class="section-label">The problem</div>
+    <h2>Every weather app fails cyclists.</h2>
+    <p>You check the forecast, cross-reference wind speed, guess what 58°F feels like at 17mph on the bike, and hope you picked the right window. Every morning. VeloVane replaces all of that with a single answer: should I ride now, later, or skip today?</p>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features">
+  <div class="container">
+    <div class="section-label">What VeloVane does</div>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <div class="feature-num">01</div>
+        <h3>Wind & temperature — the way cyclists think about it</h3>
+        <p>Cycling-specific feels-like temperature. Wind scored for how it actually affects your ride — not just a number and an arrow. Crosswind exposure, wind shifts mid-ride, building vs. dying trends. The data you already check, finally presented for riders.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-num">02</div>
+        <h3>AI that learns how you ride</h3>
+        <p>Set your preferences once — wind threshold, temperature range, preferred times, ride duration. The recommendation engine scores every hour against your profile. After 10 rides, it starts learning from your actual behavior. The advice gets sharper the more you ride.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-num">03</div>
+        <h3>One answer in under 5 seconds</h3>
+        <p>Open the app, see your recommendation: go, wait, or skip. Best ride window highlighted. Tap for detail if you want it, or just trust the call and kit up.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SMS EXPERIENCE -->
+<section class="sms-section">
+  <div class="container">
+    <div class="section-label">How the beta works</div>
+    <h2>Live ride recommendations, straight to your phone.</h2>
+    <p>For two weeks, you'll receive a daily morning text message with your personalized VeloVane ride recommendation — real weather data for your location, scored against your preferences, delivered in the same voice and format the app will use.</p>
+    <p style="margin-top: 16px;">Each message links to a live preview of your VeloVane dashboard — a mobile page showing your full morning forecast, ride windows, and conditions breakdown. Same data, same design, same experience you'll get in the app.</p>
+    <p style="margin-top: 16px; margin-bottom: 48px; color: var(--text-primary); font-weight: 400;">This isn't a survey or a demo video. It's VeloVane working for you, every morning, for 14 days.</p>
+
+    <div class="phone-demo">
+      <div class="phone-frame">
+        <div class="phone-screen">
+          <div class="lock-screen">
+            <div class="lock-time">6:12</div>
+            <div class="lock-date">Tuesday, April 7</div>
+
+            <div class="notif">
+              <div class="notif-header">
+                <div class="notif-icon">
+                  <svg viewBox="0 0 27 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M0 8.4V0.78C0 0.35 0.35 0 0.78 0H7.01C7.29 0 7.55 0.15 7.69 0.39L18.55 19.2C18.62 19.32 18.66 19.46 18.66 19.59V27.22C18.66 27.65 18.31 28 17.87 28H11.64C11.37 28 11.1 27.85 10.96 27.61L0.1 8.8C0.03 8.68 0 8.54 0 8.4Z" fill="white"/>
+                    <path d="M18.92 2L22.12 0.16C22.28 0.06 22.49 0.06 22.65 0.16L25.85 2C26.01 2.1 26.12 2.27 26.12 2.46V10.47C26.12 10.66 26.02 10.84 25.85 10.93L19.45 14.62C19.09 14.83 18.65 14.57 18.65 14.17V2.46C18.65 2.27 18.75 2.1 18.92 2Z" fill="white"/>
+                  </svg>
+                </div>
+                <span class="notif-app">VELOVANE</span>
+                <span class="notif-time">6:12 AM</span>
+              </div>
+              <div class="notif-title">Go — ride window 7–9:30am</div>
+              <div class="notif-body">62°F (55° on bike), 12mph W steady. Well within your preferences. Tap to see full forecast →</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="phone-caption">
+        <div class="phone-caption-step">
+          <div class="step-num">Step 1</div>
+          <div class="step-title">Wake up to your recommendation</div>
+          <div class="step-desc">A morning text arrives at your preferred time with today's ride verdict — go, wait, or skip — plus the best window and key conditions.</div>
+        </div>
+        <div class="phone-caption-step">
+          <div class="step-num">Step 2</div>
+          <div class="step-title">Tap for the full picture</div>
+          <div class="step-desc">The link opens a live dashboard preview with your hourly forecast, wind detail, and ride windows — the same view you'll see in the app.</div>
+        </div>
+        <div class="phone-caption-step">
+          <div class="step-num">Step 3</div>
+          <div class="step-title">Ride, and tell us how it went</div>
+          <div class="step-desc">At the end of 14 days, a short survey. Was the recommendation right? What was missing? Your feedback shapes the final product.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHO -->
+<section class="who">
+  <div class="container">
+    <div class="section-label">Who this is for</div>
+    <h2>Built for riders who ride 3–5 days a week.</h2>
+    <p>VeloVane is designed for cyclists who plan around conditions — not casual riders checking if it might rain. If you think about wind direction before you pick a route, if you've ever skipped a ride because the forecast was ambiguous, if you check three apps before deciding whether to go — you're who we built this for.</p>
+  </div>
+</section>
+
+<!-- PERKS -->
+<section class="perks">
+  <div class="container">
+    <div class="section-label">What you get</div>
+    <h2>What beta testers get</h2>
+    <ul class="perk-list">
+      <li class="perk-item">
+        <div class="perk-check">
+          <svg viewBox="0 0 12 12" fill="none"><path d="M2.5 6l2.5 2.5 4.5-5" stroke="#4CAF50" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <span class="perk-text">Daily morning ride recommendations via text, personalized to your location and preferences</span>
+      </li>
+      <li class="perk-item">
+        <div class="perk-check">
+          <svg viewBox="0 0 12 12" fill="none"><path d="M2.5 6l2.5 2.5 4.5-5" stroke="#4CAF50" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <span class="perk-text">A live dashboard preview you can check anytime — your conditions, your ride windows</span>
+      </li>
+      <li class="perk-item">
+        <div class="perk-check">
+          <svg viewBox="0 0 12 12" fill="none"><path d="M2.5 6l2.5 2.5 4.5-5" stroke="#4CAF50" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <span class="perk-text">Full access to the app on launch day before it goes public — iOS + Android</span>
+      </li>
+      <li class="perk-item">
+        <div class="perk-check">
+          <svg viewBox="0 0 12 12" fill="none"><path d="M2.5 6l2.5 2.5 4.5-5" stroke="#4CAF50" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <span class="perk-text">Direct line to the team — your feedback shapes the product</span>
+      </li>
+    </ul>
+    <div class="ask-block">
+      <div class="ask-block-label">What we ask</div>
+      <p>Use VeloVane the way you'd use any weather check before a ride. Tell us what's right, what's wrong, and what's missing. At the end of the two weeks, we'll send a short feedback survey.</p>
+    </div>
+  </div>
+</section>
+
+<!-- SIGNUP -->
+<section class="signup" id="signup">
+  <div class="container">
+    <div class="section-label">Sign up</div>
+    <h2>Request early access</h2>
+    <form class="form-grid" onsubmit="event.preventDefault();">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">First name</label>
+          <input type="text" class="form-input" placeholder="Jane">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Email</label>
+          <input type="email" class="form-input" placeholder="jane@email.com">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Phone number</label>
+          <input type="tel" class="form-input" placeholder="(555) 123-4567">
+          <span class="form-hint">For daily ride recommendations</span>
+        </div>
+        <div class="form-group">
+          <label class="form-label">ZIP code</label>
+          <input type="text" class="form-input" placeholder="68102" maxlength="5">
+          <span class="form-hint">So we pull weather for your area</span>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Days per week you ride</label>
+          <select class="form-select">
+            <option value="" disabled selected>Select</option>
+            <option value="1-2">1–2 days</option>
+            <option value="3-4">3–4 days</option>
+            <option value="5+">5+ days</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">When do you check conditions?</label>
+          <select class="form-select">
+            <option value="" disabled selected>Select</option>
+            <option value="5-6">5–6 AM</option>
+            <option value="6-7">6–7 AM</option>
+            <option value="7-8">7–8 AM</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group full">
+        <label class="form-label">Biggest frustration with current weather apps?</label>
+        <textarea class="form-textarea" placeholder="Optional — but we'd love to hear it"></textarea>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Platform preference</label>
+          <select class="form-select">
+            <option value="" disabled selected>Select</option>
+            <option value="ios">iOS</option>
+            <option value="android">Android</option>
+            <option value="both">Both</option>
+          </select>
+        </div>
+        <div style="display: flex; align-items: flex-end;">
+          <button type="submit" class="form-submit" onclick="handleSubmit()">Count me in</button>
+        </div>
+      </div>
+    </form>
+    <div id="success-msg" style="display: none; margin-top: 24px; padding: 20px 24px; background: rgba(76,175,80,0.08); border: 1px solid rgba(76,175,80,0.2); border-radius: 10px;">
+      <div style="font-size: 13px; font-weight: 400; color: #4CAF50; margin-bottom: 4px;">You're in.</div>
+      <div style="font-size: 12px; font-weight: 300; color: var(--text-secondary); line-height: 1.6;">We'll be in touch soon with next steps. Keep an eye on your inbox.</div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-logo">
+      <svg viewBox="0 0 27 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M0 8.40756V0.784399C0 0.354434 0.348624 0 0.784399 0H7.01308C7.29197 0 7.55345 0.151068 7.6929 0.389291L18.5524 19.2032C18.6221 19.3194 18.657 19.4588 18.657 19.5925V27.2156C18.657 27.6456 18.3084 28 17.8726 28H11.6439C11.365 28 11.1035 27.8489 10.9641 27.6107L0.104599 8.79685C0.0348755 8.68064 0 8.54119 0 8.40756Z" fill="#5BA4D4"/>
+        <path d="M18.9185 2.00462L22.12 0.156941C22.2827 0.0639758 22.486 0.0639758 22.6487 0.156941L25.8502 2.00462C26.0129 2.09759 26.1175 2.2719 26.1175 2.46365V10.4703C26.1175 10.662 26.0187 10.8363 25.8502 10.9293L19.4472 14.6247C19.0928 14.828 18.6512 14.5724 18.6512 14.1657V2.46365C18.6512 2.2719 18.75 2.09759 18.9185 2.00462Z" fill="#5BA4D4"/>
+      </svg>
+      <span>velovane</span>
+    </div>
+    <div class="footer-tagline">Weather intelligence for cyclists.</div>
+    <div class="footer-coming">Coming soon to iOS and Android.</div>
+  </div>
+</footer>
+
+<script>
+function handleSubmit() {
+  const form = document.querySelector('.form-grid');
+  const msg = document.getElementById('success-msg');
+  form.style.display = 'none';
+  msg.style.display = 'block';
+  window.scrollTo({ top: msg.offsetTop - 120, behavior: 'smooth' });
+}
+</script>
+
+</body>
+</html>
